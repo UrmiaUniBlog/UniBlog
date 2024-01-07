@@ -94,3 +94,10 @@ class ArticleHit(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     ip_address = models.ForeignKey(IPAddress, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
+
+
+class Message(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True, editable=False)
+    email = models.EmailField(null=True, blank=True, editable=False)
+    subject = models.CharField(max_length=100, null=True, blank=True, editable=False)
+    message = models.TextField(null=True, blank=True, editable=False)
