@@ -1,7 +1,15 @@
 from django.contrib import admin
 
+from .models import (
+    Article,
+    Category,
+    IPAddress,
+    Comment,
+    Message,
+)
+
 # Admin header change
-admin.site.site_header = "University Blog"
+admin.site.site_header = "Django Blog"
 
 
 # Register your models here.
@@ -21,3 +29,28 @@ def make_draft(modeladmin, request, queryset):
 
 
 make_draft.short_description = "Draft selected articles"
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('position', 'title', 'slug', 'parent', 'status')
+    list_filter = (['status'])
+    search_fields = ('title', 'slug')
+    prepopulated_fields = {'slug': ('title',)}
+
+
+admin.site.register(Category, CategoryAdmin)
+
+
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'thumbnail_tag', 'slug', 'author', 'publish', 'is_special', 'status', 'category_to_str')
+    list_filter = ('publish', 'status', 'author')
+    search_fields = ('title', 'description')
+    prepopulated_fields = {'slug': ('title',)}
+    ordering = ['-status', '-publish']
+    actions = [make_published, make_draft]
+
+
+admin.site.register(Article, ArticleAdmin)
+admin.site.register(IPAddress)
+admin.site.register(Comment)
+admin.site.register(Message)
