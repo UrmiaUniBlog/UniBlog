@@ -1,12 +1,30 @@
-from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import format_html
 
+from account.models import User
+
+
+# my managers
+
+
+class ArticleManager(models.Manager):
+    def published(self):
+        return self.filter(status='p')
+
+
+class CommentManager(models.Manager):
+    def published(self):
+        return self.filter(status='p')
+
+
+class CategoryManager(models.Manager):
+    def active(self):
+        return self.filter(status=True)
+
 
 # Create your models here.
-
 class IPAddress(models.Model):
     ip_address = models.GenericIPAddressField()
 
@@ -26,6 +44,8 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
+    objects = CategoryManager()
 
 
 class Article(models.Model):
@@ -68,6 +88,8 @@ class Article(models.Model):
 
     category_to_str.short_description = "Category"
 
+    objects = ArticleManager()
+
 
 class Comment(models.Model):
     STATUS_CHOICES = (
@@ -88,6 +110,8 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.body[:50]
+
+    objects = CommentManager()
 
 
 class ArticleHit(models.Model):
