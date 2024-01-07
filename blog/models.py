@@ -2,6 +2,10 @@ from django.db import models
 
 
 # Create your models here.
+class IPAddress(models.Model):
+    ip_address = models.GenericIPAddressField()
+
+
 class Category(models.Model):
     parent = models.ForeignKey('self', default=None, null=True, blank=True, on_delete=models.SET_NULL,
                                related_name='children')
