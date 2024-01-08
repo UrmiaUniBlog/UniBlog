@@ -4,7 +4,7 @@ from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 
-from blog.models import Article, Comment
+from blog.models import Article, Comment, Category
 
 
 # Create your views here.
@@ -57,3 +57,19 @@ class ArticleDetail(DetailView):
             Comment.objects.create(article=article, body=body, user=request.user, parent_id=int(parent_id))
 
         return redirect(self.request.path_info + '#comments')
+
+
+class CategoryList(ListView):
+    paginate_by = 5
+    template_name = 'blog/category_list.html'
+
+    def get_queryset(self):
+        global category
+        slug = self.kwargs.get('slug')
+        category = get_object_or_404(Category.objects.active(), slug=slug)
+        return category.articles.published()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = category
+        return context
