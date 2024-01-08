@@ -19,3 +19,17 @@ class Home(ListView):
             count=Count('hits', filter=Q(articlehit__created__gt=last_month))) \
                                                 .order_by('-count', '-publish')[:6]
         return context
+
+
+class ArticleList(ListView):
+    queryset = Article.objects.published()
+    paginate_by = 5
+
+
+class PopularList(ListView):
+    paginate_by = 5
+    template_name = 'blog/popular_list.html'
+
+    def get_queryset(self):
+        return Article.objects.published().annotate(count=Count('hits', filter=Q(hits__gt=0))) \
+            .order_by('-count', '-publish')
