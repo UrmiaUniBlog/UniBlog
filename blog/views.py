@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
 
+from django.contrib.auth.models import User
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 
-from blog.models import Article, Comment, Category
+from blog.models import Article, Comment, Category, Message
 
 
 # Create your views here.
@@ -73,3 +74,79 @@ class CategoryList(ListView):
         context = super().get_context_data(**kwargs)
         context['category'] = category
         return context
+
+
+class AuthorList(ListView):
+    paginate_by = 5
+    template_name = 'blog/author_list.html'
+
+    def get_queryset(self):
+        global author
+        username = self.kwargs.get('username')
+        author = get_object_or_404(User, username=username)
+        return author.articles.published()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['author'] = author
+        return context
+
+
+class AuthorList(ListView):
+    paginate_by = 5
+    template_name = 'blog/author_list.html'
+
+    def get_queryset(self):
+        global author
+        username = self.kwargs.get('username')
+        author = get_object_or_404(User, username=username)
+        return author.articles.published()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['author'] = author
+        return context
+
+
+class SearchList(ListView):
+    paginate_by = 5
+    template_name = 'blog/search_list.html'
+
+    def get_queryset(self):
+        search = self.request.GET.get('q')
+        return Article.objects.published().filter(Q(description__icontains=search) |
+                                                  Q(title__icontains=search) |
+                                                  Q(author__first_name__icontains=search) |
+                                                  Q(author__last_name__icontains=search))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search'] = self.request.GET.get('q')
+        return context
+
+
+class SidebarView(TemplateView):
+    template_name = 'blog/includes/sidebar.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['popular_articles'] = Article.objects.published().annotate(count=Count('hits')) \
+                                          .order_by('-count', '-publish')[:4]
+        context['categories'] = Category.objects.active()
+        return context
+
+
+class AboutUsView(TemplateView):
+    template_name = 'blog/aboutus.html'
+
+
+class ContactUsView(TemplateView):
+    template_name = 'blog/contact.html'
+
+    def post(self, request):
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        Message.objects.create(name=name, email=email, subject=subject, message=message)
+        return redirect(self.request.path_info)
