@@ -305,3 +305,37 @@ header .navbar {
 	line-height: 60px;
 	background-color: rgba(250,250,250,0.3);
 }
+.call-to-action {
+	margin-top: 100px;
+}
+
+.call-to-action .main-content {
+	padding: 40px;
+	background-image: url(../images/cta-bg.jpg);
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.call-to-action .main-content span {
+	color: #f48840;
+	font-size: 18px;
+	font-weight: 900;
+	letter-spacing: 0.5px;
+}
+
+.call-to-action .main-content h4 {
+	margin-bottom: 0px;
+	margin-top: 12px;
+	color: #fff;
+	font-size: 26px;
+	font-weight: 900;
+	letter-spacing: 0.25px;
+}
+
+.call-to-action .main-content .main-button {
+	text-align: right;
+	margin-top: 12px;
+}
+
+
