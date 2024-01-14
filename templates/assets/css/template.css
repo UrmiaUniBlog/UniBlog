@@ -260,3 +260,48 @@ header .navbar {
 	color: #fff;
 	margin-left: 8px;
 }
+.owl-banner .item .item-content ul li:last-child::after {
+	display: none;
+}
+
+.owl-banner .item .item-content ul li a {
+	font-size: 14px;
+	color: #fff;
+	font-weight: 500;
+	transition: all .3s;
+}
+
+.owl-banner .item .item-content ul li a:hover {
+	color: #f48840;
+}
+
+.owl-banner .owl-nav {
+	position: absolute;
+	top: 50%;
+	width: 100%;
+}
+
+.owl-banner .owl-nav .owl-prev {
+	position: absolute;
+	left: 40px;
+}
+
+.owl-banner .owl-nav .owl-next {
+	position: absolute;
+	right: 40px;
+}
+
+.owl-banner .owl-nav button {
+	outline: none;
+}
+
+.owl-banner .owl-nav button span {
+	color: #fff;
+	font-size: 36px;
+	width: 60px;
+	height: 60px;
+	display: inline-block;
+	text-align: center;
+	line-height: 60px;
+	background-color: rgba(250,250,250,0.3);
+}
