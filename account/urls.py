@@ -1,6 +1,6 @@
 from django.urls import path
 
-from account.views import ArticleList, ArticleCreate, CommentList, CommentUpdate
+from account.views import ArticleList, ArticleCreate, CommentList, CommentUpdate, ArticleUpdate, ArticleDelete
 
 app_name = 'account'
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path('comments/', CommentList.as_view(), name='comment-list'),
     path('comments/<int:pk>', CommentUpdate.as_view(), name='comment-update'),
     path('article/edit/<int:pk>', ArticleUpdate.as_view(), name='article-update'),
+    path('article/delete/<int:pk>', ArticleDelete.as_view(), name='article-delete'),
 ]
