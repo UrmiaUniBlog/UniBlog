@@ -1,14 +1,17 @@
-from datetime import datetime, timedelta
+from datetime import timedelta, datetime
 
-from django.contrib.auth.models import User
-from django.db.models import Count, Q
+from django.db.models import Q, Count
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, TemplateView
 
-from blog.models import Article, Comment, Category, Message
+from account.mixins import PreviewMixin
+from account.models import User
+from blog.models import Article, Category, Comment, Message
 
 
 # Create your views here.
+
+
 class Home(ListView):
     queryset = Article.objects.published()
     paginate_by = 5
@@ -60,6 +63,12 @@ class ArticleDetail(DetailView):
         return redirect(self.request.path_info + '#comments')
 
 
+class ArticlePreview(PreviewMixin, DetailView):
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(Article, pk=pk)
+
+
 class CategoryList(ListView):
     paginate_by = 5
     template_name = 'blog/category_list.html'
@@ -73,22 +82,6 @@ class CategoryList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = category
-        return context
-
-
-class AuthorList(ListView):
-    paginate_by = 5
-    template_name = 'blog/author_list.html'
-
-    def get_queryset(self):
-        global author
-        username = self.kwargs.get('username')
-        author = get_object_or_404(User, username=username)
-        return author.articles.published()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['author'] = author
         return context
 
 
