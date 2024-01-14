@@ -5,8 +5,8 @@ from django.core.mail import EmailMessage
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from account.forms import CommentForm, ProfileForm, SignupForm
@@ -137,3 +137,18 @@ class Register(CreateView):
         )
         email.send()
         return render(self.request, 'registration/account_activation_done.html')
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        is_done = True
+    else:
+        is_done = False
+    return render(request, 'registration/account_activation_complete.html', context={'is_done': is_done})
