@@ -1,13 +1,19 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from account.forms import CommentForm, ProfileForm
+from account.forms import CommentForm, ProfileForm, SignupForm
 from account.mixins import AuthorizedAccessMixin, FieldsMixin, FormValidMixin, CommentUpdateMixin, AuthorAccessMixin, \
     DeletionMixin
 from account.models import User
+from account.tokens import account_activation_token
 from blog.models import Article, Comment
 
 
@@ -107,3 +113,27 @@ class Login(LoginView):
             return reverse_lazy("account:home")
         else:
             return reverse_lazy("account:profile")
+
+
+class Register(CreateView):
+    form_class = SignupForm
+    template_name = "registration/register.html"
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        current_site = get_current_site(self.request)
+        mail_subject = 'Activate your Django Blog account.'
+        message = render_to_string('registration/account_activation_email.html', context={
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+        })
+        to_email = form.cleaned_data.get('email')
+        email = EmailMessage(
+            mail_subject, message, to=[to_email]
+        )
+        email.send()
+        return render(self.request, 'registration/account_activation_done.html')
