@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -88,3 +89,21 @@ class Profile(LoginRequiredMixin, UpdateView):
             'user': self.request.user
         })
         return kwargs
+
+
+class Login(LoginView):
+    def get_success_url(self):
+        user = self.request.user
+
+        if not self.request.POST.get('remember-me'):
+            self.request.session.set_expiry(0)
+
+        previous_page = str(self.request.GET.get('previous_url'))
+
+        if previous_page != 'None':
+            return previous_page
+
+        if user.is_superuser or user.is_staff or user.is_author:
+            return reverse_lazy("account:home")
+        else:
+            return reverse_lazy("account:profile")
