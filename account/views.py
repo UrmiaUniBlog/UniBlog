@@ -1,20 +1,23 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage
-from django.shortcuts import redirect, render
-from django.template.loader import render_to_string
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from account.forms import CommentForm, ProfileForm, SignupForm
-from account.mixins import AuthorizedAccessMixin, FieldsMixin, FormValidMixin, CommentUpdateMixin, AuthorAccessMixin, \
-    DeletionMixin
-from account.models import User
-from account.tokens import account_activation_token
 from blog.models import Article, Comment
+from .forms import ProfileForm, CommentForm
+from .mixins import (
+    FieldsMixin,
+    FormValidMixin,
+    AuthorAccessMixin,
+    DeletionMixin,
+    AuthorizedAccessMixin,
+    CommentUpdateMixin
+)
+from .models import User
+
+
+# Create your views here.
 
 
 class ArticleList(AuthorizedAccessMixin, ListView):
@@ -113,6 +116,15 @@ class Login(LoginView):
             return reverse_lazy("account:home")
         else:
             return reverse_lazy("account:profile")
+
+
+from .forms import SignupForm
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .tokens import account_activation_token
+from django.core.mail import EmailMessage
 
 
 class Register(CreateView):
