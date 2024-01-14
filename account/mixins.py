@@ -1,17 +1,7 @@
 from django.http import Http404
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
-from blog.models import Comment, Article
-
-
-class AuthorizedAccessMixin():
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_author \
-                or request.user.is_superuser \
-                or request.user.is_staff:
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            return redirect('account:profile')
+from blog.models import Article, Comment
 
 
 class FieldsMixin():
@@ -38,19 +28,6 @@ class FormValidMixin():
         return super().form_valid(form)
 
 
-class CommentUpdateMixin():
-    def dispatch(self, request, pk, *args, **kwargs):
-        comment = get_object_or_404(Comment, pk=pk)
-        if comment.article.author == request.user \
-                or request.user.is_superuser \
-                or request.user.is_staff:
-            return super().dispatch(request, *args, **kwargs)
-        elif request.user.is_author:
-            return redirect('account:comment-list')
-        else:
-            raise Http404("YOU ARE NOT AUTHORIZED FOR THIS SECTION")
-
-
 class AuthorAccessMixin():
     def dispatch(self, request, pk, *args, **kwargs):
         article = get_object_or_404(Article, pk=pk)
@@ -72,3 +49,40 @@ class DeletionMixin():
             return super().dispatch(request, *args, **kwargs)
         else:
             raise Http404("YOU ARE NOT AUTHORIZED FOR THIS ACTION")
+
+
+class PreviewMixin():
+    def dispatch(self, request, pk, *args, **kwargs):
+        article = get_object_or_404(Article, pk=pk)
+        if article.status == 'p':
+            return redirect('blog:detail', article.slug)
+        elif request.user.is_superuser \
+                or request.user.is_staff \
+                or request.user == article.author \
+                and article.status in ['d', 'r', 'b']:
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            raise Http404("YOU ARE NOT AUTHORIZED FOR THIS ACTION")
+
+
+class AuthorizedAccessMixin():
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_author \
+                or request.user.is_superuser \
+                or request.user.is_staff:
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect('account:profile')
+
+
+class CommentUpdateMixin():
+    def dispatch(self, request, pk, *args, **kwargs):
+        comment = get_object_or_404(Comment, pk=pk)
+        if comment.article.author == request.user \
+                or request.user.is_superuser \
+                or request.user.is_staff:
+            return super().dispatch(request, *args, **kwargs)
+        elif request.user.is_author:
+            return redirect('account:comment-list')
+        else:
+            raise Http404("YOU ARE NOT AUTHORIZED FOR THIS SECTION")
