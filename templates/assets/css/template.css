@@ -339,3 +339,127 @@ header .navbar {
 }
 
 
+
+.blog-posts {
+	margin-top: 100px;
+}
+
+.blog-posts .blog-post {
+	margin-bottom: 30px;
+}
+
+.blog-posts .blog-thumb img {
+	width: 100%;
+	overflow: hidden;
+}
+
+.blog-posts .down-content {
+	padding: 40px;
+	border-right: 1px solid #eee;
+	border-left: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+}
+
+.blog-posts .down-content span {
+	font-size: 18px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	font-weight: 900;
+	color: #f48840;
+}
+
+.blog-posts .down-content h4 {
+	font-size: 24px;
+	text-transform: capitalize;
+	letter-spacing: 0.5px;
+	font-weight: 900;
+	color: #20232e;
+	margin: 10px 0px 12px 0px;
+}
+
+.blog-posts .down-content ul.post-info li {
+	display: inline-block;
+	margin-right: 8px;
+}
+
+.blog-posts .down-content ul.post-info li:after {
+	content: '|';
+	color: #aaa;
+	margin-left: 8px;
+}
+
+.blog-posts .down-content h4 {
+	font-size: 20px;
+	letter-spacing: 0.25px;
+}
+
+.grid-system .down-content ul.post-info li {
+	margin-right: 3px;
+}
+
+.grid-system .down-content ul.post-info li:after {
+	margin-left: 5px;
+}
+
+.blog-posts .down-content ul.post-info li:last-child::after {
+	display: none;
+}
+
+.blog-posts .down-content ul.post-info li a {
+	font-size: 14px;
+	color: #aaa;
+	font-weight: 400;
+	transition: all .3s;
+}
+
+.blog-posts .down-content ul.post-info li a:hover {
+	color: #f48840;
+}
+
+.blog-posts .down-content p {
+	padding: 25px 0px;
+	margin: 25px 0px;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+}
+
+.blog-posts .down-content ul.post-share {
+	text-align: right;
+}
+
+.blog-posts .down-content ul.post-tags li,
+.blog-posts .down-content ul.post-share li {
+	display: inline-block;
+}
+
+.blog-posts .down-content ul.post-tags li:first-child i,
+.blog-posts .down-content ul.post-share li:first-child i {
+	color: #f48840;
+	margin-right: 5px;
+}
+
+.blog-posts .down-content ul.post-tags li,
+.blog-posts .down-content ul.post-share li {
+	color: #aaa;
+}
+
+.blog-posts .down-content ul.post-tags li a,
+.blog-posts .down-content ul.post-share li a {
+	font-size: 14px;
+	color: #aaa;
+	font-weight: 400;
+	transition: all .3s;
+}
+
+.blog-posts .down-content ul.post-tags li a:hover,
+.blog-posts .down-content ul.post-share li a:hover {
+	color: #f48840;
+}
+
+.blog-posts .main-button a {
+	height: 60px;
+	line-height: 60px;
+	padding: 0px;
+	width: 100%;
+	text-align: center;
+}
