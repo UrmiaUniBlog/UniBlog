@@ -25,3 +25,21 @@ ul {
 h1,h2,h3,h4,h5,h6 {
 	margin: 0px;
 }
+.main-button a {
+	display: inline-block;
+	background-color: #f48840;
+	color: #fff;
+	font-size: 13px;
+	font-weight: 500;
+	padding: 12px 20px;
+	text-transform: uppercase;
+	transition: all .3s;
+}
+
+.main-button a:hover {
+	background-color: #fb9857;
+}
+
+.heading-page {
+	padding-top: 110px;
+}
