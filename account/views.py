@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView
 
 from account.forms import CommentForm
-from account.mixins import AuthorizedAccessMixin, FieldsMixin, FormValidMixin, CommentUpdateMixin
+from account.mixins import AuthorizedAccessMixin, FieldsMixin, FormValidMixin, CommentUpdateMixin, AuthorAccessMixin
 from blog.models import Article, Comment
 
 
@@ -57,3 +57,9 @@ class CommentUpdate(CommentUpdateMixin, UpdateView):
             'user': self.request.user
         })
         return kwargs
+
+
+class ArticleUpdate(AuthorAccessMixin, FieldsMixin, FormValidMixin, UpdateView):
+    model = Article
+    template_name = "registration/article-create-update.html"
+    success_url = reverse_lazy('account:home')
