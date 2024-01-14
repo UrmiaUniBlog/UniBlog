@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 
-from account.mixins import AuthorizedAccessMixin, FieldsMixin, FormValidMixin
+from account.forms import CommentForm
+from account.mixins import AuthorizedAccessMixin, FieldsMixin, FormValidMixin, CommentUpdateMixin
 from blog.models import Article, Comment
 
 
@@ -32,3 +34,26 @@ class CommentList(AuthorizedAccessMixin, ListView):
             return Comment.objects.all().order_by("-created_at", "article", "user")
         else:
             return Comment.objects.filter(article__author=self.request.user).order_by("-created_at", "article", "user")
+
+
+class CommentUpdate(CommentUpdateMixin, UpdateView):
+    model = Comment
+    template_name = "registration/comment-update.html"
+    form_class = CommentForm
+    success_url = reverse_lazy("account:comment-list")
+
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        if comment.status == 'b':
+            comment.delete()
+        else:
+            # form.save(commit=True)
+            return super().form_valid(form)
+        return redirect('account:comment-list')
+
+    def get_form_kwargs(self):
+        kwargs = super(CommentUpdate, self).get_form_kwargs()
+        kwargs.update({
+            'user': self.request.user
+        })
+        return kwargs
