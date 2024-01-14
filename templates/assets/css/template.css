@@ -1,0 +1,16 @@
+
+body {
+    font-family: 'Roboto', sans-serif;
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  p {
+      margin-bottom: 0px;
+      font-size: 15px;
+      font-weight: 400;
+      color: #7a7a7a;
+      line-height: 30px;
+  }
+  
