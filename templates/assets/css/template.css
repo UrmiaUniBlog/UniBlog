@@ -98,3 +98,30 @@ header .navbar {
 .background-header .navbar-nav a.nav-link {
 	color: #1e1e1e!important;
 }
+.background-header .navbar-nav .nav-link:hover,
+.background-header .navbar-nav .active>.nav-link,
+.background-header .navbar-nav .nav-link.active,
+.background-header .navbar-nav .nav-link.show,
+.background-header .navbar-nav .show>.nav-link {
+	color: #f48840!important;
+}
+.navbar .navbar-brand {
+	float: 	left;
+	margin-top: -12px;
+	outline: none;
+}
+.navbar .navbar-brand h2 {
+	color: #1e1e1e;
+	text-transform: uppercase;
+	font-size: 24px;
+	font-weight: 900;
+	-webkit-transition: all .3s ease 0s;
+    -moz-transition: all .3s ease 0s;
+    -o-transition: all .3s ease 0s;
+    transition: all .3s ease 0s;
+}
+.navbar .navbar-brand h2 em {
+	font-size: 44px;
+	font-style: normal;
+	color: #f48840;
+}
