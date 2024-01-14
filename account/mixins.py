@@ -1,4 +1,7 @@
-from django.shortcuts import redirect
+from django.http import Http404
+from django.shortcuts import redirect, get_object_or_404
+
+from blog.models import Comment
 
 
 class AuthorizedAccessMixin():
@@ -33,3 +36,16 @@ class FormValidMixin():
             if not self.obj.status == 'r':
                 self.obj.status = 'd'
         return super().form_valid(form)
+
+
+class CommentUpdateMixin():
+    def dispatch(self, request, pk, *args, **kwargs):
+        comment = get_object_or_404(Comment, pk=pk)
+        if comment.article.author == request.user \
+                or request.user.is_superuser \
+                or request.user.is_staff:
+            return super().dispatch(request, *args, **kwargs)
+        elif request.user.is_author:
+            return redirect('account:comment-list')
+        else:
+            raise Http404("YOU ARE NOT AUTHORIZED FOR THIS SECTION")
