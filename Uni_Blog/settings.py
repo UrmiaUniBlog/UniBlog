@@ -41,9 +41,21 @@ INSTALLED_APPS = [
     # my apps
     'django_render_partial',
     'django_social_share',
+    'widget_tweaks',
+    'crispy_forms',
     "blog.apps.BlogConfig",
     "account.apps.AccountConfig",
 ]
+# # my apps
+# 'django_render_partial',
+# 'django_cleanup.apps.CleanupConfig',
+# 'django_social_share',
+# 'crispy_forms',
+# 'widget_tweaks',
+# 'social_django',
+# 'blog.apps.BlogConfig',
+# 'account.apps.AccountConfig',
+# 'testapp.apps.TestappConfig',
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
