@@ -1,0 +1,115 @@
+{% extends 'registration/base.html' %}
+
+{% block title %}
+    Articles
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        {% if Articles.count != 0 %}
+                            <thead>
+                            <tr>
+                                <th class="border-right-0" style="text-align: center"></th>
+                                <th class="border-left-0" style="text-align: center">Title</th>
+                                <th style="text-align: center">Thumbnail</th>
+                                <th style="text-align: center">Category</th>
+                                <th style="text-align: center">Author</th>
+                                <th style="text-align: center">Hits</th>
+                                <th style="text-align: center">Comments</th>
+                                <th style="text-align: center">Special</th>
+                                <th style="text-align: center">Created</th>
+                                <th style="text-align: center">Status</th>
+                            </tr>
+                            </thead>
+                        {% endif %}
+                        <tbody>
+                        {% for article in Articles %}
+                            <tr data-widget="expandable-table" aria-expanded="false">
+                                <td class="border-right-0" style="text-align: center; vertical-align: middle;">
+                                    <button type="button" class="btn btn-primary p-0">
+                                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                    </button>
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;">
+                                    {{ article.title }}</td>
+                                <td style="text-align: center; vertical-align: middle;"><img
+                                        src="{{ article.thumbnail.url }}" width="100"></td>
+                                <td style="text-align: center; vertical-align: middle;">{{ article.category_to_str }}</td>
+                                <td style="text-align: center; vertical-align: middle;">{{ article.author.get_full_name }}</td>
+                                <td style="text-align: center; vertical-align: middle;">{{ article.hits.count }}</td>
+                                <td class="col-1"
+                                    style="text-align: center; vertical-align: middle;">{{ article.comments.count }}</td>
+                                <td class="col-1" style="text-align: center; vertical-align: middle;">
+                                    {% if article.is_special %}
+                                        <i class="fa fa-check-circle" style="color: #70bf2b"></i>
+                                    {% else %}
+                                        <i class="fa fa-minus-circle" style="color: red"></i>
+                                    {% endif %}
+                                </td>
+                                <td class="col-2"
+                                    style="text-align: center; vertical-align: middle;">{{ article.created }}</td>
+                                <td class="col-1" style="text-align: center; vertical-align: middle;">
+                                    {% if article.status == 'p' %}
+                                        <span class="badge badge-success">PUBLISHED</span>
+                                        <hr>
+                                        <a target="_blank" class="badge badge-primary"
+                                           href="{% url 'blog:detail' article.slug %}">VIEW ON SITE</a><br>
+                                    {% elif article.status == 'd' %}
+                                        <span class="badge badge-secondary">DRAFT</span>
+                                        <hr>
+                                    {% elif article.status == 'r' %}
+                                        <span class="badge badge-warning">PENDING</span>
+                                        <hr>
+                                    {% elif article.status == 'b' %}
+                                        <span class="badge badge-dark">DENIED</span>
+                                        <hr>
+                                    {% endif %}
+                                    {% if article.status != 'p' %}
+                                        <a target="_blank" class="badge badge-primary"
+                                           href="{% url 'blog:preview' article.pk %}">Preview</a><br>
+                                    {% endif %}
+                                    {% if article.status != 'r' or user.is_superuser %}
+                                        <a class="badge badge-info"
+                                           href="{% url 'account:article-update' article.pk %}">EDIT</a>
+                                        <br>
+                                    {% elif not article.author.is_staff and article.author != user %}
+                                        <a class="badge badge-info"
+                                           href="{% url 'account:article-update' article.pk %}">EDIT</a>
+                                        <br>
+                                    {% endif %}
+                                    <a class="badge badge-danger"
+                                       href="{% url 'account:article-delete' article.pk %}">DELETE</a>
+                                </td>
+                            </tr>
+                            <tr class="expandable-body d-none">
+                                <td colspan="10">
+                                    <p style="display: none;">
+                                        {{ article.description|safe|linebreaks|truncatewords:50 }}
+                                    </p>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% if Articles.count == 0 %}
+                            <tr class="expandable-table">
+                            </tr>
+                            <tr class="expandable-body">
+                                <td colspan="9" style="text-align: center; vertical-align: middle; height: 150px">
+                                    <a href="{% url 'account:article-create' %}">
+                                        <button class="btn btn-warning">There is no article to display! Click to add one
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
