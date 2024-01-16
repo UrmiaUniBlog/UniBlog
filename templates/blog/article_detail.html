@@ -1,0 +1,220 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% load render_partial %}
+{% load social_share %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+    <!-- Banner Starts Here -->
+    <div class="heading-page header-text">
+        <section class="page-heading">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-content">
+                            {% if object.is_special %}
+                                <span class="badge badge-warning"><h5><i class="fa fa-star"></i>Special</h5></span>
+                            {% endif %}
+                            {% if request.resolver_match.url_name == 'preview' %}
+                                <span class="badge badge-warning"><h5>Preview</h5></span>
+                            {% endif %}
+                            <h2>{{ object.title }}</h2>
+                            <h4>{{ object.subtitle }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="blog-posts grid-system">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="all-blog-posts">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="blog-post">
+                                    <div class="blog-thumb">
+                                        <img src="{{ article.thumbnail.url }}" alt="">
+                                    </div>
+                                    <div class="down-content">
+                                        {% if object.is_special %}
+                                            <h5 class="badge badge-warning" title="This is a paid article"><i
+                                                    class="fa fa-star"></i>Special</h5>
+                                        {% endif %}
+                                        <h4>{{ article.title }}</h4>
+                                        <h5>{{ article.subtitle }}</h5>
+                                        <ul class="post-info">
+                                            <li>
+                                                <a href="{% url 'blog:author' article.author.username %}">{{ article.author.get_full_name }}</a>
+                                            </li>
+                                            <li><a href="#">{{ article.publish|date }}</a></li>
+                                            <li><a href="#">{{ article.comments.published.count }} Comments</a></li>
+                                        </ul>
+                                        {% if article.is_special %}
+                                            {% if user.is_authenticated %}
+                                                {% if user.is_special or article.author == user or user.is_superuser or user.is_staff %}
+                                                    <p>{{ article.description|safe|linebreaks }}</p>
+                                                {% else %}
+                                                    <p>{{ article.description|safe|linebreaks|truncatewords:50 }} <a
+                                                            href="#">
+                                                        <button class="btn btn-warning">
+                                                            Please
+                                                            buy special membership to see more
+                                                        </button>
+                                                    </a></p>
+
+                                                {% endif %}
+                                            {% else %}
+                                                <p>{{ article.description|safe|linebreaks|truncatewords:50 }} <a
+                                                        href="{% url 'login' %}?previous_url={{ request.path }}">
+                                                    <button class="btn btn-warning">Please login to see more
+                                                    </button>
+                                                </a></p>
+
+                                            {% endif %}
+                                        {% else %}
+                                            <p>{{ article.description|safe|linebreaks }}</p>
+                                        {% endif %}
+
+                                        <div class="post-options">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <ul class="post-tags">
+                                                        <li><i class="fa fa-tags"></i></li>
+                                                        {% for cat in article.category.all %}
+                                                            <li><a href="#">{{ cat.title }}</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="col-6">
+                                                    <ul class="post-share">
+                                                        <li><i class="fa fa-share-alt"></i></li>
+                                                        <li>{% post_to_telegram article.get_absolute_url article.title "Telegram" %}</li>
+                                                        ,
+                                                        <li>{% post_to_whatsapp article.get_absolute_url "WhatsApp" %}</li>
+                                                        ,
+                                                        <li>{% post_to_twitter article.get_absolute_url article.title "Twitter" %}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12" id="comments">
+                                <div class="sidebar-item comments">
+                                    <div class="sidebar-heading">
+                                        <h2>{{ article.comments.published.count }} comments</h2>
+                                    </div>
+                                    <div class="content">
+                                        <ul>
+                                            {% for comment in article.comments.published %}
+                                                {% if comment.parent == None %}
+                                                    <li>
+                                                        <div class="author-thumb">
+                                                            {% if request.user.profile.image %}
+                                                                <img src="{{ request.user.profile.image.url }}"
+                                                                     alt="">
+                                                            {% else %}
+                                                                <img src="{% static 'blog/assets/images/anonymous-user.png' %}"
+                                                                     alt="">
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="right-content">
+                                                            <h4>{{ comment.user.get_full_name }}<span>{{ comment.created_at|date }}</span>
+                                                                <button onclick="set_value({{ comment.id }})"
+                                                                        class="btn btn-outline-primary"><i
+                                                                        class="fa fa-reply"></i>reply
+                                                                </button>
+                                                            </h4>
+                                                            <p>{{ comment.body|safe }}</p>
+                                                        </div>
+                                                    </li>
+                                                {% endif %}
+
+                                                {% for reply in comment.replies.published %}
+                                                    <li class="replied">
+                                                        <div class="author-thumb">
+                                                            {% if request.user.profile.image %}
+                                                                <img src="{{ request.user.profile.image.url }}"
+                                                                     alt="">
+                                                            {% else %}
+                                                                <img src="{% static 'blog/assets/images/anonymous-user.png' %}"
+                                                                     alt="">
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="right-content">
+                                                            <h4>{{ reply.user.get_full_name }}<span>{{ reply.created_at|date }}</span>
+                                                            </h4>
+                                                            <p>{{ reply.body|safe }}</p>
+                                                        </div>
+                                                    </li>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12" id="scroll_to_comment">
+                                <div class="sidebar-item submit-comment">
+                                    <div class="sidebar-heading">
+                                        <h2>Your comment</h2>
+                                    </div>
+                                    {% if request.user.is_authenticated %}
+                                        <div class="content">
+                                            <form id="comment" action="#" method="post">
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <input type="hidden" id="parent_id" name="parent_id" value="">
+                                                        <fieldset>
+                                                        <textarea name="body" rows="6" id="message"
+                                                                  placeholder="Type your comment"
+                                                                  required=""></textarea>
+                                                        </fieldset>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <fieldset>
+                                                            <button type="submit" id="form-submit" class="main-button">
+                                                                Submit
+                                                            </button>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    {% else %}
+                                        <div class="content">
+                                            <a href="{% url 'login' %}?previous_url={{ request.path }}">
+                                                <button class="btn btn-warning">Please login to write your comment
+                                                </button>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% render_partial 'blog:sidebar_partial' %}
+            </div>
+        </div>
+    </section>
+
+    <script>
+
+        function set_value(id) {
+            document.getElementById('parent_id').value = id;
+            document.getElementById('scroll_to_comment').scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+    </script>
+
+{% endblock %}
+
