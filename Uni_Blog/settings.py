@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     # my apps
+    'django_render_partial',
+    'django_social_share',
     "blog.apps.BlogConfig",
     "account.apps.AccountConfig",
 ]
