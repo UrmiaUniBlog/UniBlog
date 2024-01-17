@@ -124,7 +124,17 @@ requires special membership without it, user will see only the first 50 words of
 
 ## Contributors
 
-@AlirezaAbavi @LovemanAmir @Romihkh @farrinwings99 @ZarhaJnti @masumehkarimi
+@AlirezaAbavi - AlirezaAbavi
+
+@LovemanAmir - AmirHossein Mahmudi
+
+@Romihkh - Romina Hemati
+
+@farrinwings99 - Farrin Bahadori
+
+@ZarhaJnti - Zahra Janati
+
+@masumehkarimi - Masumeh Karimi
 
 ## Credits
 
