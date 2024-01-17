@@ -136,7 +136,7 @@ class Register(CreateView):
         user.is_active = False
         user.save()
         current_site = get_current_site(self.request)
-        mail_subject = 'Activate your Django Blog account.'
+        mail_subject = 'Activate your Uni Blog account.'
         message = render_to_string('registration/account_activation_email.html', context={
             'user': user,
             'domain': current_site.domain,

@@ -9,7 +9,7 @@ from .models import (
 )
 
 # Admin header change
-admin.site.site_header = "Django Blog"
+admin.site.site_header = "Uni Blog"
 
 
 # Register your models here.
