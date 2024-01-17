@@ -18,11 +18,13 @@
     <ul class="navbar-nav ml-auto">
         <!-- Logout -->
         <li class="nav-item">
-            <a class="btn btn-danger" href="{% url 'logout' %}"
-               role="button">
-                Logout
-                <i class="fas fa-sign-out-alt"></i>
-            </a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">
+                    logout
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </form>
         </li>
 
     </ul>
