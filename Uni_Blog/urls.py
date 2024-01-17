@@ -1,8 +1,7 @@
-"""
-URL configuration for Uni_Blog project.
+"""DjangoBlog URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.0/topics/http/urls/
+    https://docs.djangoproject.com/en/4.0/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -22,8 +21,9 @@ from django.urls import path, include
 from account.views import Login, Register, activate
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
     path('login/', Login.as_view(), name='login'),
+    path('', include('social_django.urls', namespace='social')),
     path('register/', Register.as_view(), name='register'),
     path('activate/<uidb64>/<token>/', activate, name='activate'),
     path('', include('django.contrib.auth.urls')),
