@@ -2,7 +2,7 @@
 
 > A Blog developed using Django framework along with a fully customized Management Panel
 
-### UNI BLOG is up and running on UUWN's network and it's accessible at [This Address](https://192.168.116.176:8000).
+### UNI BLOG is up and running on UUWN's network and it's accessible at [This Address](http://192.168.116.176:8000).
 
 ![](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)
